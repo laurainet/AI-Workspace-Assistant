@@ -90,10 +90,10 @@ export function AppShell({ title, subtitle, children }: { title: string; subtitl
           <button className="neu rounded-xl p-2 md:hidden" onClick={() => setOpen(!open)} aria-label="Menu">
             {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
-          <div>
+          {title && <div>
             <h1 className="text-2xl font-semibold md:text-3xl">{title}</h1>
             {subtitle && <p className="mt-1 text-sm text-muted-foreground">{subtitle}</p>}
-          </div>
+          </div>}
         </header>
         {children}
       </main>
