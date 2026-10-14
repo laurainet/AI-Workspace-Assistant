@@ -1,4 +1,4 @@
-# AI-Workspace-Assistant
+# AI Workspace Assistant
 This is an AI assistant that will assist with generating emails, summarizing meeting notes and scheduling tasks in the workspace.
 This intelligent, LLM-powered productivity agent is designed to streamline your daily workflow.
 
