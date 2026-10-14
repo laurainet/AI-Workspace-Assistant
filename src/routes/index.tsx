@@ -39,7 +39,7 @@ function Overview() {
     .slice(0, 6);
   const overdue = tasks.filter((t) => t.due_date && t.due_date < today() && t.status !== "completed").length;
   const meta = (user?.user_metadata ?? {}) as Record<string, string>;
-  const name = meta.full_name || meta.name || user?.email?.split("@")[0] || "there";
+  const name = meta["full_name"] || meta["name"] || user?.email?.split("@")[0] || "there";
 
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
