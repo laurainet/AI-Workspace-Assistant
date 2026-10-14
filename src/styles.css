@@ -52,13 +52,13 @@
 
 :root {
   --radius: 1rem;
-  --background: oklch(0.925 0.018 245);
-  --foreground: oklch(0.27 0.035 255);
+  --background: oklch(0.94 0.02 350);
+  --foreground: oklch(0.3 0.04 340);
   --card: oklch(0.97 0.01 245 / 55%);
   --card-foreground: var(--foreground);
   --popover: oklch(0.97 0.01 245);
   --popover-foreground: var(--foreground);
-  --primary: oklch(0.56 0.12 195);
+  --primary: oklch(0.72 0.11 355);
   --primary-foreground: oklch(0.99 0 0);
   --secondary: oklch(0.9 0.02 245);
   --secondary-foreground: var(--foreground);
@@ -72,20 +72,20 @@
   --warning: oklch(0.75 0.14 75);
   --border: oklch(1 0 0 / 55%);
   --input: oklch(0.88 0.02 245);
-  --ring: oklch(0.56 0.12 195);
+  --ring: oklch(0.72 0.11 355);
 
   --neu-light: oklch(1 0 0 / 85%);
-  --neu-dark: oklch(0.7 0.04 250 / 45%);
+  --neu-dark: oklch(0.72 0.05 345 / 40%);
   --shadow-neu: 8px 8px 18px var(--neu-dark), -8px -8px 18px var(--neu-light);
   --shadow-neu-sm: 4px 4px 10px var(--neu-dark), -4px -4px 10px var(--neu-light);
   --shadow-neu-inset: inset 4px 4px 9px var(--neu-dark), inset -4px -4px 9px var(--neu-light);
-  --gradient-primary: linear-gradient(135deg, oklch(0.6 0.12 195), oklch(0.5 0.12 225));
+  --gradient-primary: linear-gradient(135deg, oklch(0.8 0.1 355), oklch(0.68 0.13 345));
   --gradient-canvas:
-    radial-gradient(40rem 30rem at 10% 0%, oklch(0.85 0.08 195 / 70%), transparent 60%),
+    radial-gradient(40rem 30rem at 10% 0%, oklch(0.88 0.07 355 / 70%), transparent 60%),
     radial-gradient(35rem 30rem at 95% 15%, oklch(0.86 0.08 40 / 55%), transparent 60%),
     radial-gradient(40rem 35rem at 60% 100%, oklch(0.85 0.06 260 / 60%), transparent 60%);
 
-  --chart-1: oklch(0.56 0.12 195);
+  --chart-1: oklch(0.72 0.11 355);
   --chart-2: oklch(0.72 0.14 40);
   --chart-3: oklch(0.62 0.13 155);
   --chart-4: oklch(0.75 0.14 75);
@@ -130,7 +130,7 @@
   box-shadow: var(--shadow-neu-sm);
 }
 @utility neu-inset {
-  background: oklch(0.92 0.018 245 / 70%);
+  background: oklch(0.93 0.025 350 / 70%);
   box-shadow: var(--shadow-neu-inset);
   border: none;
 }

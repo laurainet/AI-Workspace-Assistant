@@ -1,8 +1,11 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { Mail, NotebookPen, KanbanSquare, ArrowRight, AlertTriangle } from "lucide-react";
+import { useState } from "react";
+import { Mail, NotebookPen, KanbanSquare, ArrowRight, AlertTriangle, Sparkles, Send } from "lucide-react";
 import { AppShell, Panel } from "@/components/AppShell";
 import { tasksQuery, generationsQuery, STATUSES, PRIORITY_RANK, today } from "@/lib/tasks";
+import { useAuth } from "@/hooks/use-auth";
+import { setDraft } from "@/lib/workspace-store";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -11,6 +14,8 @@ export const Route = createFileRoute("/")({
       { name: "description", content: "AI assistant for professionals: write emails, summarize meetings and plan tasks automatically." },
       { property: "og:title", content: "Atelier — AI Workspace Assistant" },
       { property: "og:description", content: "Write emails, summarize meetings and plan tasks with AI." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
     ],
   }),
   component: Overview,
@@ -23,6 +28,9 @@ const TOOLS = [
 ] as const;
 
 function Overview() {
+  const { user } = useAuth();
+  const navigate = useNavigate();
+  const [ask, setAsk] = useState("");
   const { data: tasks = [] } = useQuery(tasksQuery);
   const { data: gens = [] } = useQuery(generationsQuery);
   const upcoming = tasks
@@ -30,30 +38,61 @@ function Overview() {
     .sort((a, b) => (PRIORITY_RANK[a.priority] ?? 1) - (PRIORITY_RANK[b.priority] ?? 1) || (a.due_date ?? "9").localeCompare(b.due_date ?? "9"))
     .slice(0, 6);
   const overdue = tasks.filter((t) => t.due_date && t.due_date < today() && t.status !== "completed").length;
+  const meta = (user?.user_metadata ?? {}) as Record<string, string>;
+  const name = meta["full_name"] || meta["name"] || user?.email?.split("@")[0] || "there";
+
+  const submit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const q = ask.trim();
+    if (!q) return;
+    const l = q.toLowerCase();
+    if (/meeting|minutes|summar|notes|transcript/.test(l)) {
+      setDraft("meet.notes", q);
+      navigate({ to: "/meetings" });
+    } else if (/task|plan|deadline|todo|to-do|schedule|calendar|action item/.test(l)) {
+      setDraft("plan.bulk", q);
+      navigate({ to: "/planner" });
+    } else {
+      setDraft("email.mode", "compose");
+      setDraft("email.prompt", q);
+      navigate({ to: "/email" });
+    }
+  };
+
+  const statCards = [
+    ...STATUSES.map((s) => ({ key: s.key, label: s.label, count: tasks.filter((t) => t.status === s.key).length, to: "/planner" as const })),
+    { key: "gens", label: "Saved generations", count: gens.length, to: "/history" as const },
+  ];
 
   return (
-    <AppShell title="Good to see you" subtitle="Your AI workspace — everything you draft and plan is saved automatically.">
+    <AppShell title="" subtitle="">
       <div className="space-y-6">
-        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-          {STATUSES.map((s) => (
-            <Panel key={s.key} className="p-5">
-              <div className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">{s.label}</div>
-              <div className="font-display mt-2 text-4xl font-semibold">{tasks.filter((t) => t.status === s.key).length}</div>
-            </Panel>
-          ))}
-          <Panel className="p-5">
-            <div className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Saved generations</div>
-            <div className="font-display mt-2 text-4xl font-semibold">{gens.length}</div>
-          </Panel>
+        <div className="pt-2 text-center">
+          <h1 className="font-display text-3xl font-semibold md:text-4xl">Welcome, <span className="text-primary">{name}</span></h1>
+          <p className="mt-2 text-sm text-muted-foreground">Everything you draft and plan is saved automatically.</p>
+          <form onSubmit={submit} className="glass mx-auto mt-6 flex max-w-2xl items-center gap-2 rounded-full p-2 pl-5">
+            <Sparkles className="h-4 w-4 shrink-0 text-primary" />
+            <input
+              value={ask}
+              onChange={(e) => setAsk(e.target.value)}
+              placeholder="What can I do for you today?"
+              className="min-w-0 flex-1 bg-transparent py-2 text-sm placeholder:text-muted-foreground/80 focus:outline-none"
+            />
+            <button type="submit" className="bg-gradient-primary flex h-10 w-10 items-center justify-center rounded-full text-primary-foreground" aria-label="Generate">
+              <Send className="h-4 w-4" />
+            </button>
+          </form>
         </div>
 
-        <div className="grid gap-4 md:grid-cols-3">
+        <div className="grid gap-3 md:grid-cols-3">
           {TOOLS.map((t) => (
-            <Link key={t.to} to={t.to} className="glass group rounded-3xl p-6 transition-transform hover:-translate-y-1">
-              <div className="neu mb-4 flex h-12 w-12 items-center justify-center rounded-2xl text-primary"><t.icon className="h-5 w-5" /></div>
-              <h3 className="text-lg font-semibold">{t.title}</h3>
-              <p className="mt-1 text-sm text-muted-foreground">{t.desc}</p>
-              <span className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-primary">Open <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" /></span>
+            <Link key={t.to} to={t.to} className="glass group flex items-center gap-3 rounded-2xl p-4 transition-transform hover:-translate-y-0.5">
+              <div className="neu flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-primary"><t.icon className="h-4 w-4" /></div>
+              <div className="min-w-0 flex-1">
+                <h3 className="text-sm font-semibold">{t.title}</h3>
+                <p className="truncate text-xs text-muted-foreground">{t.desc}</p>
+              </div>
+              <ArrowRight className="h-4 w-4 text-primary transition-transform group-hover:translate-x-1" />
             </Link>
           ))}
         </div>
@@ -85,6 +124,15 @@ function Overview() {
               {!gens.length && <p className="text-sm text-muted-foreground">Nothing generated yet.</p>}
             </div>
           </Panel>
+        </div>
+
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+          {statCards.map((s) => (
+            <Link key={s.key} to={s.to} className="glass flex items-center justify-between rounded-2xl px-4 py-3 transition-transform hover:-translate-y-0.5">
+              <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">{s.label}</span>
+              <span className="font-display text-xl font-semibold text-primary">{s.count}</span>
+            </Link>
+          ))}
         </div>
       </div>
     </AppShell>

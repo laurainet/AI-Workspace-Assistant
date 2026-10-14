@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState, type ReactNode } from "react";
-import { LayoutDashboard, Mail, NotebookPen, KanbanSquare, History, LogOut, Menu, X, ShieldAlert, Feather } from "lucide-react";
+import { LayoutDashboard, Mail, NotebookPen, KanbanSquare, History, LogOut, Menu, X, ShieldAlert, Feather, PanelLeftClose, PanelLeftOpen } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 import { supabase } from "@/integrations/supabase/client";
 import { cn } from "@/lib/utils";
@@ -17,6 +17,9 @@ export function AppShell({ title, subtitle, children }: { title: string; subtitl
   const { user, loading } = useAuth();
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
+  const [collapsed, setCollapsed] = useState(false);
+  useEffect(() => { setCollapsed(localStorage.getItem("atelier-collapsed") === "1"); }, []);
+  const toggle = () => { const v = !collapsed; setCollapsed(v); localStorage.setItem("atelier-collapsed", v ? "1" : "0"); };
 
   useEffect(() => {
     if (!loading && !user) navigate({ to: "/auth" });
@@ -26,43 +29,47 @@ export function AppShell({ title, subtitle, children }: { title: string; subtitl
     return <div className="flex min-h-screen items-center justify-center text-muted-foreground">Loading workspace…</div>;
   }
 
-  const sidebar = (
-    <nav className="flex h-full flex-col gap-2 p-5">
-      <div className="mb-6 flex items-center gap-3 px-2">
+  const renderSidebar = (mini: boolean) => (
+    <nav className={cn("flex h-full flex-col gap-2", mini ? "items-center p-3" : "p-5")}>
+      <div className={cn("mb-6 flex items-center gap-3", mini ? "" : "px-2")}>
         <div className="bg-gradient-primary flex h-10 w-10 items-center justify-center rounded-xl text-primary-foreground shadow-[var(--shadow-neu-sm)]">
           <Feather className="h-5 w-5" />
         </div>
-        <div>
+        {!mini && <div>
           <div className="font-display text-lg font-semibold">Atelier</div>
           <div className="text-xs text-muted-foreground">AI workspace</div>
-        </div>
+        </div>}
       </div>
       {NAV.map((n) => (
         <Link
           key={n.to}
           to={n.to}
           onClick={() => setOpen(false)}
+          title={n.label}
           activeOptions={{ exact: n.to === "/" }}
           className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-muted-foreground transition-all hover:text-foreground"
           activeProps={{ className: "neu !text-primary" }}
         >
-          <n.icon className="h-4 w-4" />
-          {n.label}
+          <n.icon className="h-4 w-4 shrink-0" />
+          {!mini && n.label}
         </Link>
       ))}
       <div className="mt-auto space-y-3">
-        <div className="neu-inset rounded-xl p-3 text-xs text-muted-foreground">
+        <button onClick={toggle} title={mini ? "Expand sidebar" : "Collapse sidebar"} className="hidden w-full items-center gap-3 rounded-xl px-3 py-2 text-sm text-muted-foreground hover:text-foreground md:flex">
+          {mini ? <PanelLeftOpen className="h-4 w-4" /> : <><PanelLeftClose className="h-4 w-4" /> Collapse</>}
+        </button>
+        {!mini && <><div className="neu-inset rounded-xl p-3 text-xs text-muted-foreground">
           <div className="mb-1 flex items-center gap-1.5 font-semibold text-foreground">
             <ShieldAlert className="h-3.5 w-3.5 text-accent" /> Use AI responsibly
           </div>
           AI can make mistakes. Review and edit every output before sending or acting on it.
         </div>
-        <div className="truncate px-2 text-xs text-muted-foreground">{user.email}</div>
+        <div className="truncate px-2 text-xs text-muted-foreground">{user.email}</div></>}
         <button
           onClick={() => supabase.auth.signOut()}
           className="flex w-full items-center gap-3 rounded-xl px-3 py-2 text-sm text-muted-foreground hover:text-destructive"
         >
-          <LogOut className="h-4 w-4" /> Sign out
+          <LogOut className="h-4 w-4" /> {!mini && "Sign out"}
         </button>
       </div>
     </nav>
@@ -70,11 +77,11 @@ export function AppShell({ title, subtitle, children }: { title: string; subtitl
 
   return (
     <div className="flex min-h-screen">
-      <aside className="glass sticky top-4 m-4 hidden h-[calc(100vh-2rem)] w-64 shrink-0 rounded-3xl md:block">{sidebar}</aside>
+      <aside className={cn("glass sticky top-4 m-4 hidden h-[calc(100vh-2rem)] shrink-0 rounded-3xl transition-all md:block", collapsed ? "w-20" : "w-64")}>{renderSidebar(collapsed)}</aside>
       {open && (
         <div className="fixed inset-0 z-40 bg-foreground/20 md:hidden" onClick={() => setOpen(false)}>
           <aside className="glass h-full w-72 rounded-r-3xl" onClick={(e) => e.stopPropagation()}>
-            {sidebar}
+            {renderSidebar(false)}
           </aside>
         </div>
       )}
@@ -83,10 +90,10 @@ export function AppShell({ title, subtitle, children }: { title: string; subtitl
           <button className="neu rounded-xl p-2 md:hidden" onClick={() => setOpen(!open)} aria-label="Menu">
             {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
-          <div>
+          {title && <div>
             <h1 className="text-2xl font-semibold md:text-3xl">{title}</h1>
             {subtitle && <p className="mt-1 text-sm text-muted-foreground">{subtitle}</p>}
-          </div>
+          </div>}
         </header>
         {children}
       </main>
