@@ -48,7 +48,7 @@ export function AppearanceSync() {
     h.classList.toggle("readable-font", a.readableFont);
     h.classList.toggle("wide-spacing", a.wideSpacing);
     h.classList.toggle("underline-links", a.underlineLinks);
-    if (a.accent === "pink") delete h.dataset.accent; else h.dataset.accent = a.accent;
+    if (a.accent === "pink") h.removeAttribute("data-accent"); else h.setAttribute("data-accent", a.accent);
     h.style.fontSize = `${a.size}%`;
   }, [a]);
   return null;

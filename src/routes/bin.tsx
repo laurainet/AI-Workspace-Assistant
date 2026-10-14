@@ -31,14 +31,14 @@ function BinPage() {
 
   const restore = async (table: "tasks" | "generations", id: string) => {
     const { error } = await supabase.from(table).update({ deleted_at: null }).eq("id", id);
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     toast.success("Restored");
     refresh();
   };
   const purge = async (table: "tasks" | "generations", id: string) => {
     if (!confirm("Delete this permanently? This can't be undone.")) return;
     const { error } = await supabase.from(table).delete().eq("id", id);
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     toast.success("Permanently deleted");
     refresh();
   };
