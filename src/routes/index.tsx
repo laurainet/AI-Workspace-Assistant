@@ -90,7 +90,7 @@ function Overview() {
               <div className="neu flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-primary"><t.icon className="h-4 w-4" /></div>
               <div className="min-w-0 flex-1">
                 <h3 className="text-sm font-semibold">{t.title}</h3>
-                <p className="truncate text-xs text-muted-foreground">{t.desc}</p>
+                <p className="text-xs text-muted-foreground">{t.desc}</p>
               </div>
               <ArrowRight className="h-4 w-4 text-primary transition-transform group-hover:translate-x-1" />
             </Link>
