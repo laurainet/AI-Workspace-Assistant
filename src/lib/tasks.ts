@@ -9,8 +9,7 @@ export const STATUSES: { key: Status; label: string }[] = [
   { key: "in_progress", label: "In Progress" },
   { key: "completed", label: "Completed" },
 ];
-const RANK: Record<string, number> = { high: 0, medium: 1, low: 2 };
-export const PRIORITY_RANK = new Proxy(RANK, { get: (t, k: string) => t[k] ?? 1 }) as Record<string, number> & { [k: string]: number };
+export const PRIORITY_RANK: Record<string, number> = { high: 0, medium: 1, low: 2 };
 
 export const tasksQuery = queryOptions({
   queryKey: ["tasks"],
