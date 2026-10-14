@@ -40,13 +40,13 @@ function HistoryPage() {
   const save = async () => {
     if (!sel) return;
     const { error } = await supabase.from("generations").update({ output: edit }).eq("id", sel.id);
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     toast.success("Saved");
     qc.invalidateQueries({ queryKey: ["generations"] });
   };
   const del = async (id: string) => {
     const { error } = await supabase.from("generations").delete().eq("id", id);
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     if (id === selId) setSelId(null);
     qc.invalidateQueries({ queryKey: ["generations"] });
   };

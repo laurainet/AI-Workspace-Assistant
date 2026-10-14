@@ -73,14 +73,14 @@ function PlannerPage() {
     e.preventDefault();
     if (!newTitle.trim()) return;
     const { error } = await supabase.from("tasks").insert({ title: newTitle.trim(), due_date: newDue || null, priority: newPrio, source: "manual" });
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     setNewTitle("");
     setNewDue("");
     refresh();
   };
 
   const extract = async () => {
-    if (!bulk.trim()) return toast.error("Paste emails or notes to extract tasks from.");
+    if (!bulk.trim()) { toast.error("Paste emails or notes to extract tasks from."); return; }
     setBusy(true);
     try {
       const r = await extractTasks({ data: { text: bulk, today: today() } });
@@ -109,7 +109,7 @@ function PlannerPage() {
   };
 
   const byPriority = useMemo(
-    () => [...tasks].filter((t) => t.status !== "completed").sort((a, b) => PRIORITY_RANK[a.priority] - PRIORITY_RANK[b.priority] || (a.due_date ?? "9").localeCompare(b.due_date ?? "9")),
+    () => [...tasks].filter((t) => t.status !== "completed").sort((a, b) => (PRIORITY_RANK[a.priority] ?? 1) - (PRIORITY_RANK[b.priority] ?? 1) || (a.due_date ?? "9").localeCompare(b.due_date ?? "9")),
     [tasks],
   );
   const byDate = useMemo(() => {

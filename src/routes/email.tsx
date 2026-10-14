@@ -39,7 +39,7 @@ function EmailPage() {
   const qc = useQueryClient();
 
   const run = async () => {
-    if (!context.trim() && !prompt.trim()) return toast.error("Add some context or a prompt first.");
+    if (!context.trim() && !prompt.trim()) { toast.error("Add some context or a prompt first."); return; }
     setBusy(true);
     try {
       const r = await generateEmail({ data: { mode: mode as "compose", context, prompt, tone } });

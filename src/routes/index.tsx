@@ -27,7 +27,7 @@ function Overview() {
   const { data: gens = [] } = useQuery(generationsQuery);
   const upcoming = tasks
     .filter((t) => t.status !== "completed")
-    .sort((a, b) => PRIORITY_RANK[a.priority] - PRIORITY_RANK[b.priority] || (a.due_date ?? "9").localeCompare(b.due_date ?? "9"))
+    .sort((a, b) => (PRIORITY_RANK[a.priority] ?? 1) - (PRIORITY_RANK[b.priority] ?? 1) || (a.due_date ?? "9").localeCompare(b.due_date ?? "9"))
     .slice(0, 6);
   const overdue = tasks.filter((t) => t.due_date && t.due_date < today() && t.status !== "completed").length;
 

@@ -34,7 +34,7 @@ function MeetingsPage() {
   const qc = useQueryClient();
 
   const run = async () => {
-    if (!notes.trim()) return toast.error("Paste your meeting notes first.");
+    if (!notes.trim()) { toast.error("Paste your meeting notes first."); return; }
     setBusy(true);
     try {
       const r = await summarizeMeeting({ data: { notes, today: today() } });
@@ -57,7 +57,7 @@ function MeetingsPage() {
       source: "meeting",
     }));
     const { error } = await supabase.from("tasks").insert(rows);
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     toast.success(`${rows.length} action items added to Planner`);
     setActionsRaw("[]");
     qc.invalidateQueries({ queryKey: ["tasks"] });
