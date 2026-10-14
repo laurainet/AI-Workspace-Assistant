@@ -45,7 +45,7 @@ function HistoryPage() {
     qc.invalidateQueries({ queryKey: ["generations"] });
   };
   const del = async (id: string) => {
-    const { error } = await supabase.from("generations").delete().eq("id", id);
+    const { error } = await supabase.from("generations").update({ deleted_at: new Date().toISOString() }).eq("id", id);
     if (error) { toast.error(error.message); return; }
     if (id === selId) setSelId(null);
     qc.invalidateQueries({ queryKey: ["generations"] });

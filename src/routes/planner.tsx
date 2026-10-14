@@ -61,7 +61,7 @@ function PlannerPage() {
   });
   const remove = useMutation({
     mutationFn: async (id: string) => {
-      const { error } = await supabase.from("tasks").delete().eq("id", id);
+      const { error } = await supabase.from("tasks").update({ deleted_at: new Date().toISOString() }).eq("id", id);
       if (error) throw error;
     },
     onMutate: (id) => qc.setQueryData<Task[]>(["tasks"], (old) => old?.filter((t) => t.id !== id)),

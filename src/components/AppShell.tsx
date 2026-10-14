@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState, type ReactNode } from "react";
-import { LayoutDashboard, Mail, NotebookPen, KanbanSquare, History, LogOut, Menu, X, ShieldAlert, Feather, PanelLeftClose, PanelLeftOpen } from "lucide-react";
+import { LayoutDashboard, Mail, NotebookPen, KanbanSquare, History, LogOut, Menu, X, ShieldAlert, Feather, PanelLeftClose, PanelLeftOpen, Trash2, Settings } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 import { supabase } from "@/integrations/supabase/client";
 import { cn } from "@/lib/utils";
@@ -11,6 +11,8 @@ const NAV = [
   { to: "/meetings", label: "Meeting Notes", icon: NotebookPen },
   { to: "/planner", label: "Planner", icon: KanbanSquare },
   { to: "/history", label: "History", icon: History },
+  { to: "/bin", label: "Bin", icon: Trash2 },
+  { to: "/settings", label: "Settings", icon: Settings },
 ] as const;
 
 export function AppShell({ title, subtitle, children }: { title: string; subtitle?: string; children: ReactNode }) {

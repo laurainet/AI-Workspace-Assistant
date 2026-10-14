@@ -85,6 +85,7 @@
     radial-gradient(35rem 30rem at 95% 15%, oklch(0.86 0.08 40 / 55%), transparent 60%),
     radial-gradient(40rem 35rem at 60% 100%, oklch(0.85 0.06 260 / 60%), transparent 60%);
 
+  --inset-bg: oklch(0.93 0.025 350 / 70%);
   --chart-1: oklch(0.72 0.11 355);
   --chart-2: oklch(0.72 0.14 40);
   --chart-3: oklch(0.62 0.13 155);
@@ -99,6 +100,36 @@
   --sidebar-border: oklch(1 0 0 / 50%);
   --sidebar-ring: var(--ring);
 }
+
+[data-accent="blue"] { --primary: oklch(0.7 0.1 240); --ring: var(--primary); --gradient-primary: linear-gradient(135deg, oklch(0.8 0.08 230), oklch(0.66 0.11 250)); }
+[data-accent="green"] { --primary: oklch(0.66 0.1 155); --ring: var(--primary); --gradient-primary: linear-gradient(135deg, oklch(0.82 0.09 150), oklch(0.62 0.11 160)); }
+[data-accent="yellow"] { --primary: oklch(0.7 0.12 85); --ring: var(--primary); --gradient-primary: linear-gradient(135deg, oklch(0.88 0.11 95), oklch(0.72 0.13 80)); --primary-foreground: oklch(0.25 0.04 70); }
+[data-accent="purple"] { --primary: oklch(0.66 0.11 300); --ring: var(--primary); --gradient-primary: linear-gradient(135deg, oklch(0.8 0.08 300), oklch(0.62 0.12 290)); }
+
+.dark {
+  --background: oklch(0.22 0.02 330);
+  --foreground: oklch(0.94 0.01 340);
+  --card: oklch(0.28 0.02 330 / 60%);
+  --popover: oklch(0.27 0.02 330);
+  --secondary: oklch(0.3 0.02 330);
+  --muted: oklch(0.3 0.02 330);
+  --muted-foreground: oklch(0.75 0.02 340);
+  --input: oklch(0.32 0.02 330);
+  --border: oklch(1 0 0 / 10%);
+  --neu-light: oklch(1 0 0 / 5%);
+  --neu-dark: oklch(0 0 0 / 45%);
+  --inset-bg: oklch(0.19 0.02 330 / 80%);
+  --sidebar: oklch(0.26 0.02 330 / 60%);
+  --gradient-canvas:
+    radial-gradient(40rem 30rem at 10% 0%, oklch(0.35 0.06 350 / 50%), transparent 60%),
+    radial-gradient(40rem 35rem at 60% 100%, oklch(0.3 0.05 280 / 50%), transparent 60%);
+}
+.hc { --muted-foreground: var(--foreground); --border: oklch(0.5 0 0 / 70%); }
+.hc * { text-shadow: none; }
+.reduce-motion *, .reduce-motion *::before, .reduce-motion *::after { transition: none !important; animation: none !important; transform: none !important; }
+.readable-font body, .readable-font h1, .readable-font h2, .readable-font h3, .readable-font h4 { font-family: "Atkinson Hyperlegible", sans-serif; letter-spacing: 0.01em; }
+.wide-spacing body { line-height: 1.8; letter-spacing: 0.02em; }
+.underline-links a { text-decoration: underline; }
 
 @layer base {
   * {
@@ -130,7 +161,7 @@
   box-shadow: var(--shadow-neu-sm);
 }
 @utility neu-inset {
-  background: oklch(0.93 0.025 350 / 70%);
+  background: var(--inset-bg);
   box-shadow: var(--shadow-neu-inset);
   border: none;
 }

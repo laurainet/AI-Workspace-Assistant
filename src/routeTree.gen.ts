@@ -11,10 +11,12 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as BinRouteImport } from './routes/bin'
 import { Route as EmailRouteImport } from './routes/email'
 import { Route as HistoryRouteImport } from './routes/history'
 import { Route as MeetingsRouteImport } from './routes/meetings'
 import { Route as PlannerRouteImport } from './routes/planner'
+import { Route as SettingsRouteImport } from './routes/settings'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -24,6 +26,11 @@ const IndexRoute = IndexRouteImport.update({
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BinRoute = BinRouteImport.update({
+  id: '/bin',
+  path: '/bin',
   getParentRoute: () => rootRouteImport,
 } as any)
 const EmailRoute = EmailRouteImport.update({
@@ -46,54 +53,85 @@ const PlannerRoute = PlannerRouteImport.update({
   path: '/planner',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SettingsRoute = SettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/bin': typeof BinRoute
   '/email': typeof EmailRoute
   '/history': typeof HistoryRoute
   '/meetings': typeof MeetingsRoute
   '/planner': typeof PlannerRoute
+  '/settings': typeof SettingsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/bin': typeof BinRoute
   '/email': typeof EmailRoute
   '/history': typeof HistoryRoute
   '/meetings': typeof MeetingsRoute
   '/planner': typeof PlannerRoute
+  '/settings': typeof SettingsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/bin': typeof BinRoute
   '/email': typeof EmailRoute
   '/history': typeof HistoryRoute
   '/meetings': typeof MeetingsRoute
   '/planner': typeof PlannerRoute
+  '/settings': typeof SettingsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/auth' | '/email' | '/history' | '/meetings' | '/planner'
-  fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth' | '/email' | '/history' | '/meetings' | '/planner'
-  id:
-    | '__root__'
+  fullPaths:
     | '/'
     | '/auth'
+    | '/bin'
     | '/email'
     | '/history'
     | '/meetings'
     | '/planner'
+    | '/settings'
+  fileRoutesByTo: FileRoutesByTo
+  to:
+    | '/'
+    | '/auth'
+    | '/bin'
+    | '/email'
+    | '/history'
+    | '/meetings'
+    | '/planner'
+    | '/settings'
+  id:
+    | '__root__'
+    | '/'
+    | '/auth'
+    | '/bin'
+    | '/email'
+    | '/history'
+    | '/meetings'
+    | '/planner'
+    | '/settings'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthRoute: typeof AuthRoute
+  BinRoute: typeof BinRoute
   EmailRoute: typeof EmailRoute
   HistoryRoute: typeof HistoryRoute
   MeetingsRoute: typeof MeetingsRoute
   PlannerRoute: typeof PlannerRoute
+  SettingsRoute: typeof SettingsRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -110,6 +148,13 @@ declare module '@tanstack/react-router' {
       path: '/auth'
       fullPath: '/auth'
       preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/bin': {
+      id: '/bin'
+      path: '/bin'
+      fullPath: '/bin'
+      preLoaderRoute: typeof BinRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/email': {
@@ -140,16 +185,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PlannerRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/settings': {
+      id: '/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof SettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthRoute: AuthRoute,
+  BinRoute: BinRoute,
   EmailRoute: EmailRoute,
   HistoryRoute: HistoryRoute,
   MeetingsRoute: MeetingsRoute,
   PlannerRoute: PlannerRoute,
+  SettingsRoute: SettingsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

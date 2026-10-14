@@ -17,6 +17,7 @@ export type Database = {
       generations: {
         Row: {
           created_at: string
+          deleted_at: string | null
           id: string
           input: string
           kind: string
@@ -27,6 +28,7 @@ export type Database = {
         }
         Insert: {
           created_at?: string
+          deleted_at?: string | null
           id?: string
           input?: string
           kind: string
@@ -37,6 +39,7 @@ export type Database = {
         }
         Update: {
           created_at?: string
+          deleted_at?: string | null
           id?: string
           input?: string
           kind?: string
@@ -50,6 +53,7 @@ export type Database = {
       tasks: {
         Row: {
           created_at: string
+          deleted_at: string | null
           due_date: string | null
           id: string
           owner: string | null
@@ -61,6 +65,7 @@ export type Database = {
         }
         Insert: {
           created_at?: string
+          deleted_at?: string | null
           due_date?: string | null
           id?: string
           owner?: string | null
@@ -72,6 +77,7 @@ export type Database = {
         }
         Update: {
           created_at?: string
+          deleted_at?: string | null
           due_date?: string | null
           id?: string
           owner?: string | null
